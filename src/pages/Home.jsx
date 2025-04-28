@@ -106,9 +106,6 @@ const Home = () => {
         <TechSection>
           <TechnologySection />
         </TechSection>
-        <FooterSection>
-          <Footer />
-        </FooterSection>
       </MainContent>
     </HomeWrapper>
   );
