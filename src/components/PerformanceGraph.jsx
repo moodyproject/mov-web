@@ -1,28 +1,41 @@
 import React from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { Line } from 'react-chartjs-2';
 import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
   Tooltip,
-  ResponsiveContainer
-} from 'recharts';
+  Legend,
+  Filler
+} from 'chart.js';
 
-const GraphContainer = styled(motion.div)`
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  padding: 2rem;
-  height: 400px;
-  margin-bottom: 2rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+// Register ChartJS components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
+
+const ChartWrapper = styled.div`
+  width: 100%;
+  height: 100%;
   position: relative;
-  overflow: hidden;
-
+  z-index: 2;
+  background: transparent;
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
   &::before {
     content: '';
     position: absolute;
@@ -30,164 +43,154 @@ const GraphContainer = styled(motion.div)`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, transparent 100%);
+    background: transparent;
     opacity: 0;
     transition: opacity 0.3s ease;
+    border-radius: 16px;
     z-index: -1;
   }
-
+  
   &:hover {
-    transform: translateY(-4px);
-    border-color: var(--color-accent);
-    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.1);
-
+    background: transparent;
+    border-color: transparent;
+    
     &::before {
-      opacity: 1;
+      opacity: 0;
     }
   }
 `;
 
-const GraphTitle = styled(motion.h3)`
+const ChartTitle = styled.h3`
+  color: ${({ theme }) => theme.colors.text};
   font-size: 1.25rem;
-  color: var(--color-text-primary);
-  margin: 0 0 2rem 0;
   font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
   letter-spacing: -0.02em;
 `;
 
-const CustomTooltip = styled(motion.div)`
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(8px);
-`;
+const PerformanceGraph = ({ title = "Performance Analytics" }) => {
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: 'rgba(10, 9, 15, 0.95)',
+        titleColor: 'rgba(255, 255, 255, 0.9)',
+        bodyColor: 'rgba(255, 255, 255, 0.8)',
+        borderColor: 'rgba(109, 40, 217, 0.3)',
+        borderWidth: 1,
+        padding: 16,
+        cornerRadius: 12,
+        titleFont: {
+          size: 14,
+          weight: '600',
+        },
+        bodyFont: {
+          size: 13,
+        },
+        displayColors: false,
+        boxShadow: '0 8px 32px rgba(109, 40, 217, 0.2)',
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          color: 'rgba(109, 40, 217, 0.08)',
+          borderColor: 'rgba(109, 40, 217, 0.15)',
+        },
+        ticks: {
+          color: 'rgba(255, 255, 255, 0.7)',
+          font: {
+            size: 12,
+            weight: '500',
+          },
+        },
+      },
+      y: {
+        min: 0,
+        max: 100,
+        grid: {
+          color: 'rgba(109, 40, 217, 0.08)',
+          borderColor: 'rgba(109, 40, 217, 0.15)',
+        },
+        ticks: {
+          color: 'rgba(255, 255, 255, 0.7)',
+          font: {
+            size: 12,
+            weight: '500',
+          },
+          callback: function(value) {
+            return value + '%';
+          },
+        },
+      },
+    },
+    elements: {
+      line: {
+        tension: 0.4,
+      },
+      point: {
+        radius: 0,
+        hoverRadius: 8,
+        hoverBorderWidth: 3,
+        hoverBorderColor: 'rgba(109, 40, 217, 0.8)',
+        hoverBackgroundColor: 'rgba(255, 255, 255, 0.9)',
+      },
+    },
+  };
 
-const TooltipTitle = styled.p`
-  color: var(--color-text-primary);
-  margin: 0 0 0.5rem 0;
-  font-weight: 500;
-`;
+  const data = {
+    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'],
+    datasets: [
+      {
+        label: 'Performance Score',
+        data: [68, 72, 76, 81, 85, 89, 92, 95],
+        borderColor: '#6D28D9',
+        backgroundColor: function(context) {
+          const chart = context.chart;
+          const {ctx, chartArea} = chart;
+          
+          if (!chartArea) {
+            return null;
+          }
+          
+          const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+          gradient.addColorStop(0, 'rgba(109, 40, 217, 0)');
+          gradient.addColorStop(0.3, 'rgba(109, 40, 217, 0.1)');
+          gradient.addColorStop(0.7, 'rgba(109, 40, 217, 0.3)');
+          gradient.addColorStop(1, 'rgba(109, 40, 217, 0.5)');
+          return gradient;
+        },
+        borderWidth: 3,
+        fill: true,
+        pointBackgroundColor: '#6D28D9',
+        pointBorderColor: 'rgba(255, 255, 255, 0.8)',
+        pointBorderWidth: 2,
+      },
+      {
+        label: 'Target Performance',
+        data: [75, 78, 80, 82, 84, 86, 88, 90],
+        borderColor: '#8B5CF6',
+        borderWidth: 2,
+        borderDash: [8, 4],
+        fill: false,
+        pointRadius: 0,
+        pointHoverRadius: 6,
+      },
+    ],
+  };
 
-const TooltipValue = styled.p`
-  color: ${props => props.color};
-  margin: 0;
-  font-size: 0.875rem;
-`;
-
-const CustomTooltipContent = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <CustomTooltip
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 10 }}
-        transition={{ duration: 0.2 }}
-      >
-        <TooltipTitle>{label}</TooltipTitle>
-        {payload.map((entry, index) => (
-          <TooltipValue key={index} color={entry.color}>
-            {entry.name}: {entry.value}%
-          </TooltipValue>
-        ))}
-      </CustomTooltip>
-    );
-  }
-  return null;
-};
-
-const data = [
-  { name: 'Week 1', performance: 75, accuracy: 82, efficiency: 70 },
-  { name: 'Week 2', performance: 80, accuracy: 85, efficiency: 75 },
-  { name: 'Week 3', performance: 85, accuracy: 88, efficiency: 80 },
-  { name: 'Week 4', performance: 88, accuracy: 90, efficiency: 85 },
-  { name: 'Week 5', performance: 92, accuracy: 93, efficiency: 90 },
-  { name: 'Week 6', performance: 95, accuracy: 95, efficiency: 92 },
-  { name: 'Week 7', performance: 98, accuracy: 97, efficiency: 95 },
-];
-
-const PerformanceGraph = ({ title }) => {
   return (
-    <GraphContainer
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      viewport={{ once: true }}
-    >
-      <GraphTitle
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        viewport={{ once: true }}
-      >
-        {title}
-      </GraphTitle>
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart
-          data={data}
-          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-        >
-          <defs>
-            <linearGradient id="colorPerformance" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="var(--color-accent)" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="var(--color-accent)" stopOpacity={0}/>
-            </linearGradient>
-            <linearGradient id="colorAccuracy" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#4CAF50" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="#4CAF50" stopOpacity={0}/>
-            </linearGradient>
-            <linearGradient id="colorEfficiency" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#2196F3" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="#2196F3" stopOpacity={0}/>
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" opacity={0.2} />
-          <XAxis
-            dataKey="name"
-            stroke="var(--color-text-secondary)"
-            tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }}
-            axisLine={{ stroke: 'var(--color-text-secondary)', strokeWidth: 1 }}
-            tickLine={{ stroke: 'var(--color-text-secondary)' }}
-            height={60}
-          />
-          <YAxis
-            stroke="var(--color-text-secondary)"
-            tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }}
-            axisLine={{ stroke: 'var(--color-text-secondary)', strokeWidth: 1 }}
-            tickLine={{ stroke: 'var(--color-text-secondary)' }}
-            width={60}
-            domain={[0, 100]}
-            tickFormatter={(value) => `${value}%`}
-          />
-          <Tooltip content={<CustomTooltipContent />} />
-          <Area
-            type="monotone"
-            dataKey="performance"
-            stroke="var(--color-accent)"
-            fillOpacity={1}
-            fill="url(#colorPerformance)"
-            strokeWidth={2}
-          />
-          <Area
-            type="monotone"
-            dataKey="accuracy"
-            stroke="#4CAF50"
-            fillOpacity={1}
-            fill="url(#colorAccuracy)"
-            strokeWidth={2}
-          />
-          <Area
-            type="monotone"
-            dataKey="efficiency"
-            stroke="#2196F3"
-            fillOpacity={1}
-            fill="url(#colorEfficiency)"
-            strokeWidth={2}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
-    </GraphContainer>
+    <ChartWrapper>
+      <ChartTitle>{title}</ChartTitle>
+      <div style={{ height: 'calc(100% - 3rem)' }}>
+        <Line options={options} data={data} />
+      </div>
+    </ChartWrapper>
   );
 };
 

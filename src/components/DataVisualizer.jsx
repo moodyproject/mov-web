@@ -147,16 +147,18 @@ const DataVisualizer = () => {
   };
 
   return (
-    <VisualizerContainer
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      <ChartContainer>
-        <Line data={data} options={options} />
-      </ChartContainer>
-    </VisualizerContainer>
+      <VisualizerContainer>
+        <ChartContainer>
+          <Line data={data} options={options} />
+        </ChartContainer>
+      </VisualizerContainer>
+    </motion.div>
   );
 };
 

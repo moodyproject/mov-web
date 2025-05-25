@@ -1,25 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
+import { backgroundStyles } from '../ui';
 
 const PageContainer = styled.div`
+  ${backgroundStyles}
   position: relative;
   min-height: 100vh;
-  background: radial-gradient(
-    circle at center,
-    var(--color-surface) 0%,
-    var(--color-background) 100%
-  );
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
 
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(
+    background: ${({ theme }) => `radial-gradient(
       circle at 50% 50%,
-      var(--color-accent) 0%,
+      ${theme.components.button.primary.background} 0%,
       transparent 70%
-    );
+    )`};
     opacity: 0.05;
     pointer-events: none;
     z-index: 1;

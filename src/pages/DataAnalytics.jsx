@@ -2,109 +2,50 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import PerformanceGraph from '../components/PerformanceGraph';
+import { backgroundStyles } from '../components/ui';
+import { 
+  UniversalGrid, 
+  UniversalMetricCard, 
+  UniversalChartContainer, 
+  UniversalFeatureCard, 
+  UniversalSection, 
+  UniversalContentWrapper, 
+  UniversalHeaderContainer 
+} from '../styles/UniversalStyles';
 
-const PageContainer = styled.div`
-  background: radial-gradient(
-    circle at center,
-    var(--color-surface) 0%,
-    var(--color-background) 100%
-  );
-  position: relative;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
-  overflow-y: auto;
-  height: 100vh;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(
-      circle at 50% 50%,
-      var(--color-accent) 0%,
-      transparent 70%
-    );
-    opacity: 0.1;
-    z-index: 1;
-  }
-
-  /* Custom scrollbar styling */
-  &::-webkit-scrollbar {
-    width: 8px;
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.2);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--color-accent);
-    border-radius: 4px;
-    opacity: 0.5;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent-hover);
-  }
-`;
-
-const Section = styled.section`
+const ShowcaseSection = styled(UniversalSection)`
+  ${backgroundStyles}
+  width: 100%;
+  height: 100%;
   min-height: 100vh;
-  scroll-snap-align: start;
   position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 0;
-  background: radial-gradient(
-    circle at center,
-    var(--color-surface) 0%,
-    var(--color-background) 100%
-  );
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(
-      circle at 50% 50%,
-      var(--color-accent) 0%,
-      transparent 70%
-    );
-    opacity: 0.1;
-    z-index: 1;
-  }
 `;
 
-const ContentWrapper = styled.div`
-  max-width: 1800px;
-  width: 100%;
+const ContentWrapper = styled(UniversalContentWrapper)`
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem;
   position: relative;
   z-index: 2;
+  width: 100%;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 2rem;
 `;
 
-const HeaderSection = styled.div`
+const HeaderContainer = styled(UniversalHeaderContainer)`
   text-align: center;
+  position: relative;
   max-width: 800px;
-  width: 100%;
-  margin-bottom: 3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem 0;
 `;
 
 const Overline = styled(motion.span)`
@@ -113,176 +54,120 @@ const Overline = styled(motion.span)`
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.1em;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.components.button.primary.background};
+  margin-bottom: 1.5rem;
   padding: 0.75rem 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--color-border);
+  background: ${({ theme }) => theme.colors.backgroundSecondary};
   border-radius: 100px;
-  width: fit-content;
+  border: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
-const Title = styled(motion.h1)`
-  font-size: clamp(2.5rem, 5vw, 4rem);
+const SectionTitle = styled(motion.h2)`
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  margin-bottom: 1.5rem;
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 600;
-  color: var(--color-text-primary);
-  line-height: 1.2;
-  margin: 0;
   letter-spacing: -0.02em;
+  line-height: 1.2;
 `;
 
 const Description = styled(motion.p)`
   font-size: 1.25rem;
-  color: var(--color-text-secondary);
-  line-height: 1.6;
+  color: ${({ theme }) => theme.colors.textSecondary};
   max-width: 640px;
   margin: 0 auto;
+  line-height: 1.6;
 `;
 
-const MetricsGrid = styled.div`
-  display: grid;
+const MetricsGrid = styled(UniversalGrid)`
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  width: 100%;
-
+  justify-content: center;
+  max-width: 900px;
+  margin: 0 auto;
+  
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    max-width: 600px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 640px) {
     grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: 400px;
   }
 `;
 
-const MetricCard = styled(motion.div)`
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  padding: 2rem;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-4px);
-    border-color: var(--color-accent);
-    background: rgba(0, 0, 0, 0.3);
+const MetricCard = styled(UniversalMetricCard)`
+  min-height: 180px;
+  
+  @media (max-width: 768px) {
+    min-height: 160px;
   }
 `;
 
 const MetricValue = styled.div`
-  font-size: 3rem;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 600;
-  color: var(--color-text-primary);
-  margin-bottom: 1rem;
-  line-height: 1;
+  color: ${({ theme }) => theme.components.button.primary.background};
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.02em;
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
 `;
 
 const MetricLabel = styled.div`
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 500;
   margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
 `;
 
-const MetricTitle = styled.h3`
-  font-size: 1.25rem;
-  color: var(--color-text-primary);
-  margin: 0 0 1rem 0;
-  font-weight: 600;
-`;
+const MetricDescription = styled.div`
+  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+  color: ${({ theme }) => theme.colors.textSecondary};
+  line-height: 1.4;
+  opacity: 0.8;
+  max-width: 200px;
+  transition: all 0.3s ease;
 
-const MetricDescription = styled.p`
-  color: var(--color-text-secondary);
-  line-height: 1.6;
-  font-size: 1rem;
-  margin: 0;
-`;
-
-const GraphSection = styled.div`
-  width: 100%;
-  max-width: 1800px;
-  margin: 0 auto;
-  padding: 0 4rem;
-`;
-
-const GraphGrid = styled.div`
-  width: 100%;
-  background: transparent;
-  border: none;
-  border-radius: 24px;
-  padding: 2.5rem;
-  height: 450px;
-  display: flex;
-  flex-direction: column;
-`;
-
-const GraphContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  border-radius: 20px;
-  overflow: hidden;
-  padding: 2.5rem;
-  display: flex;
-  flex-direction: column;
-`;
-
-const GraphContent = styled.div`
-  flex: 1;
-  width: 100%;
-  position: relative;
-  border-radius: 16px;
-  overflow: hidden;
-  padding: 1.5rem;
-`;
-
-const InsightsSection = styled.div`
-  width: 100%;
-  max-width: 1800px;
-  margin: 0 auto;
-  padding: 0 4rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const InsightsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  width: 100%;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+  ${MetricCard}:hover & {
+    color: ${({ theme }) => theme.colors.text};
+    opacity: 1;
   }
 `;
 
-const InsightCard = styled(motion.div)`
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  padding: 2rem;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+const ChartContainer = styled(UniversalChartContainer)`
+  height: 500px;
+  margin: 2rem auto 0;
+`;
 
+const InsightsGrid = styled(UniversalGrid)`
+  grid-template-columns: repeat(2, 1fr);
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+`;
+
+const InsightCard = styled(UniversalFeatureCard)`
+  gap: 1.25rem;
+  
   &:hover {
-    transform: translateY(-4px);
-    border-color: var(--color-accent);
-    background: rgba(0, 0, 0, 0.3);
+    transform: translateY(-8px) scale(1.02);
   }
 `;
 
 const InsightTitle = styled.h3`
   font-size: 1.5rem;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   margin: 0;
   font-weight: 600;
 `;
 
 const InsightDescription = styled.p`
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   line-height: 1.5;
   margin: 0;
   font-size: 1rem;
@@ -298,7 +183,7 @@ const FeatureList = styled.ul`
 `;
 
 const Feature = styled.li`
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   font-size: 1rem;
   line-height: 1.5;
   padding-left: 1.5rem;
@@ -308,13 +193,13 @@ const Feature = styled.li`
     content: '→';
     position: absolute;
     left: 0;
-    color: var(--color-accent);
+    color: ${({ theme }) => theme.components.button.primary.background};
     transition: transform 0.3s ease;
   }
 
   ${InsightCard}:hover &::before {
     transform: translateX(4px);
-    color: var(--color-text-primary);
+    color: ${({ theme }) => theme.colors.text};
   }
 `;
 
@@ -322,19 +207,16 @@ const metrics = [
   {
     label: "Accuracy Rate",
     value: "99.8%",
-    title: "Movement Analysis",
     description: "High-precision tracking of individual and unit movements in real-time combat scenarios"
   },
   {
     label: "Processing Speed",
     value: "<5ms",
-    title: "Instant Feedback",
     description: "Ultra-low latency analysis enabling immediate tactical adjustments during training"
   },
   {
     label: "Data Points",
     value: "1M+",
-    title: "Daily Insights",
     description: "Comprehensive analysis of movement patterns, positioning, and tactical decisions"
   }
 ];
@@ -379,37 +261,11 @@ const insights = [
 ];
 
 const DataAnalytics = () => {
-  const [activeSection, setActiveSection] = useState(0);
-  const sectionRefs = [useRef(null), useRef(null), useRef(null)];
-
-  const scrollToSection = (index) => {
-    sectionRefs[index].current?.scrollIntoView({ behavior: 'smooth' });
-    setActiveSection(index);
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const pageTop = window.pageYOffset;
-      sectionRefs.forEach((ref, index) => {
-        const element = ref.current;
-        if (!element) return;
-        
-        const rect = element.getBoundingClientRect();
-        if (rect.top <= 100 && rect.bottom >= 100) {
-          setActiveSection(index);
-        }
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <PageContainer>
-      <Section ref={sectionRefs[0]}>
+    <>
+      <ShowcaseSection>
         <ContentWrapper>
-          <HeaderSection>
+          <HeaderContainer>
             <Overline
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -417,64 +273,81 @@ const DataAnalytics = () => {
             >
               Advanced Analytics
             </Overline>
-            <Title
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              Combat Performance Intelligence
-            </Title>
-            <Description
+            <SectionTitle
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
+              Combat Performance Intelligence
+            </SectionTitle>
+            <Description
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
               Transform training data into actionable insights with our advanced analytics platform,
               delivering real-time performance metrics and tactical recommendations.
             </Description>
-          </HeaderSection>
+          </HeaderContainer>
 
           <MetricsGrid>
             {metrics.map((metric, index) => (
               <MetricCard
-                key={metric.title}
+                key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <MetricLabel>{metric.label}</MetricLabel>
                 <MetricValue>{metric.value}</MetricValue>
-                <MetricTitle>{metric.title}</MetricTitle>
+                <MetricLabel>{metric.label}</MetricLabel>
                 <MetricDescription>{metric.description}</MetricDescription>
               </MetricCard>
             ))}
           </MetricsGrid>
         </ContentWrapper>
-      </Section>
+      </ShowcaseSection>
 
-      <Section ref={sectionRefs[1]}>
+      <ShowcaseSection>
         <ContentWrapper>
-          <HeaderSection style={{ marginBottom: '3rem' }}>
-            <Overline>Performance Metrics</Overline>
-            <Title style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
+          <HeaderContainer>
+            <Overline
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Performance Metrics
+            </Overline>
+            <SectionTitle
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
               Training Progress Analytics
-            </Title>
-            <Description>
+            </SectionTitle>
+            <Description
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
               Track performance improvements and identify areas for enhancement with our comprehensive analytics dashboard.
             </Description>
-          </HeaderSection>
-          <GraphSection>
-            <GraphGrid>
-              <PerformanceGraph title="Performance Metrics" />
-            </GraphGrid>
-          </GraphSection>
+          </HeaderContainer>
+          
+          <ChartContainer
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <PerformanceGraph title="Performance Metrics" />
+          </ChartContainer>
         </ContentWrapper>
-      </Section>
+      </ShowcaseSection>
 
-      <Section ref={sectionRefs[2]}>
-        <InsightsSection>
-          <HeaderSection style={{ marginBottom: '3rem' }}>
+      <ShowcaseSection>
+        <ContentWrapper>
+          <HeaderContainer>
             <Overline
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -482,23 +355,22 @@ const DataAnalytics = () => {
             >
               Intelligent Insights
             </Overline>
-            <Title
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}
-            >
-              Data-Driven Combat Excellence
-            </Title>
-            <Description
+            <SectionTitle
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
+              Data-Driven Combat Excellence
+            </SectionTitle>
+            <Description
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
               Leverage advanced machine learning algorithms to unlock deeper insights into combat performance
               and tactical effectiveness.
             </Description>
-          </HeaderSection>
+          </HeaderContainer>
 
           <InsightsGrid>
             {insights.map((insight, index) => (
@@ -506,8 +378,8 @@ const DataAnalytics = () => {
                 key={insight.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <InsightTitle>{insight.title}</InsightTitle>
                 <InsightDescription>{insight.description}</InsightDescription>
@@ -519,9 +391,9 @@ const DataAnalytics = () => {
               </InsightCard>
             ))}
           </InsightsGrid>
-        </InsightsSection>
-      </Section>
-    </PageContainer>
+        </ContentWrapper>
+      </ShowcaseSection>
+    </>
   );
 };
 

@@ -12,19 +12,13 @@ export const PageContainer = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${({ theme }) => theme.colors.gradients.dark};
+    background: ${({ theme }) => `radial-gradient(
+      circle at 50% 30%,
+      ${theme.components.button.primary.background} 0%,
+      transparent 80%
+    )`};
+    opacity: 0.04;
     z-index: 1;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: ${({ theme }) => theme.colors.gradients.glow};
-    z-index: 2;
   }
 `;
 

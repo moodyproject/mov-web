@@ -1,171 +1,171 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import PageContainer from '../components/common/PageContainer';
+import { backgroundStyles } from '../components/ui';
+import { 
+  UniversalGrid, 
+  UniversalFeatureCard, 
+  UniversalSection, 
+  UniversalContentWrapper, 
+  UniversalHeaderContainer 
+} from '../styles/UniversalStyles';
 
-const Section = styled.section`
-  height: 100vh;
-  scroll-snap-align: start;
+const ShowcaseSection = styled(UniversalSection)`
+  ${backgroundStyles}
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
   position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 0;
-  z-index: 2;
-  scroll-snap-stop: always;
-  background: var(--color-background);
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle at 50% 50%,
-      var(--color-accent) 0%,
-      transparent 70%
-    );
-    opacity: 0.1;
-    pointer-events: none;
-  }
 `;
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled(UniversalContentWrapper)`
   max-width: 1440px;
-  width: 100%;
   margin: 0 auto;
-  padding: 0 2rem;
   position: relative;
   z-index: 2;
-  height: 100%;
+  width: 100%;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: 100%;
+  gap: 2rem;
 `;
 
-const HeaderSection = styled.div`
+const HeaderContainer = styled(UniversalHeaderContainer)`
   text-align: center;
-  margin-bottom: 4rem;
   position: relative;
-  z-index: 2;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem 0;
 `;
 
-const Title = styled(motion.h1)`
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 700;
-  color: var(--color-text-primary);
+const Overline = styled(motion.span)`
+  display: inline-block;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: ${({ theme }) => theme.components.button.primary.background};
   margin-bottom: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: ${({ theme }) => theme.colors.backgroundSecondary};
+  border-radius: 100px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+const SectionTitle = styled(motion.h2)`
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  margin-bottom: 1.5rem;
+  color: ${({ theme }) => theme.colors.text};
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 1.2;
 `;
 
 const Description = styled(motion.p)`
   font-size: 1.25rem;
-  color: var(--color-text-secondary);
-  max-width: 800px;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  max-width: 640px;
   margin: 0 auto;
   line-height: 1.6;
 `;
 
-const FeaturesGrid = styled.div`
-  display: grid;
+const FeaturesGrid = styled(UniversalGrid)`
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  margin-top: 3rem;
-
+  
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 640px) {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 `;
 
-const FeatureCard = styled(motion.div)`
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-
+const FeatureCard = styled(UniversalFeatureCard)`
   &:hover {
-    border-color: var(--color-accent);
-    transform: translateY(-4px);
+    transform: translateY(-8px) scale(1.02);
   }
 `;
 
 const FeatureTitle = styled.h3`
   font-size: 1.25rem;
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 600;
-  color: var(--color-text-primary);
-  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin: 0;
 `;
 
 const FeatureDescription = styled.p`
-  font-size: 0.95rem;
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   line-height: 1.6;
+  font-size: 0.95rem;
+  margin: 0;
 `;
 
 const FeatureList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  flex: 1;
 `;
 
 const FeatureItem = styled.li`
-  font-size: 0.95rem;
-  color: var(--color-text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+  padding-left: 1.25rem;
+  position: relative;
 
   &::before {
-    content: '•';
-    color: var(--color-accent);
-    font-size: 1.2rem;
-    line-height: 1;
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: ${({ theme }) => theme.components.button.primary.background};
+    transition: transform 0.3s ease;
   }
-`;
 
-const DataSection = styled.div`
-  margin: 6rem 0;
+  ${FeatureCard}:hover &::before {
+    transform: translateX(4px);
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 const DataGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
-  margin-top: 3rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 `;
 
-const DataCard = styled(motion.div)`
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-
-  &:hover {
-    border-color: var(--color-accent);
-    transform: translateY(-4px);
-  }
-`;
+const DataCard = styled(FeatureCard)``;
 
 const DataMetrics = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
+  margin-top: 0.5rem;
 `;
 
 const Metric = styled.div`
@@ -177,48 +177,36 @@ const Metric = styled.div`
 const MetricValue = styled.div`
   font-size: 2.5rem;
   font-weight: 600;
-  color: var(--color-accent);
+  color: ${({ theme }) => theme.components.button.primary.background};
   line-height: 1;
 `;
 
 const MetricLabel = styled.div`
   font-size: 0.95rem;
-  color: var(--color-text-secondary);
-`;
-
-const ReadinessSection = styled.div`
-  margin: 6rem 0;
+  color: ${({ theme }) => theme.colors.textSecondary};
 `;
 
 const ReadinessCards = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  margin-top: 3rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 640px) {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 `;
 
-const ReadinessCard = styled(motion.div)`
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-
-  &:hover {
-    border-color: var(--color-accent);
-    transform: translateY(-4px);
-  }
-`;
+const ReadinessCard = styled(FeatureCard)``;
 
 const ReadinessMetric = styled.div`
   display: flex;
@@ -229,7 +217,7 @@ const ReadinessMetric = styled.div`
 const ReadinessValue = styled.div`
   font-size: 3rem;
   font-weight: 600;
-  color: var(--color-accent);
+  color: ${({ theme }) => theme.components.button.primary.background};
   line-height: 1;
 `;
 
@@ -239,106 +227,53 @@ const ReadinessInfo = styled.div`
 
 const ReadinessLabel = styled.div`
   font-size: 1.1rem;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: 0.5rem;
   font-weight: 500;
 `;
 
 const ReadinessDescription = styled.div`
   font-size: 0.9rem;
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   line-height: 1.5;
 `;
 
 const CommandCenter = () => {
-  const [activeSection, setActiveSection] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const sections = ['overview', 'analytics', 'readiness'];
-  const sectionRefs = sections.map(() => useRef(null));
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const pageTop = window.scrollY;
-      const pageBottom = pageTop + window.innerHeight;
-      const viewportMiddle = pageTop + (window.innerHeight / 2);
-
-      sectionRefs.forEach((ref, index) => {
-        if (!ref.current) return;
-
-        const elementTop = ref.current.offsetTop;
-        const elementBottom = elementTop + ref.current.offsetHeight;
-
-        if (elementTop <= viewportMiddle && elementBottom >= viewportMiddle) {
-          setActiveSection(index);
-        }
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const handleWheel = (e) => {
-      if (isScrolling) return;
-      
-      e.preventDefault();
-      const delta = e.deltaY;
-      const currentIndex = activeSection;
-      let nextIndex;
-
-      if (delta > 0 && currentIndex < sections.length - 1) {
-        nextIndex = currentIndex + 1;
-      } else if (delta < 0 && currentIndex > 0) {
-        nextIndex = currentIndex - 1;
-      } else {
-        return;
-      }
-
-      setIsScrolling(true);
-      sectionRefs[nextIndex].current.scrollIntoView({ behavior: 'smooth' });
-      setActiveSection(nextIndex);
-
-      // Reset scrolling state after animation completes
-      setTimeout(() => {
-        setIsScrolling(false);
-      }, 1000); // Adjust this value based on your scroll animation duration
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    return () => window.removeEventListener('wheel', handleWheel);
-  }, [activeSection, isScrolling]);
-
   return (
-    <PageContainer>
-      <Section ref={sectionRefs[0]}>
+    <>
+      <ShowcaseSection>
         <ContentWrapper>
-          <HeaderSection>
-            <Title
+          <HeaderContainer>
+            <Overline
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Command & Control
+            </Overline>
+            <SectionTitle
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
             >
               Command & Control Dashboard
-            </Title>
+            </SectionTitle>
             <Description
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
             >
               Advanced analytics and monitoring platform providing comprehensive visibility into unit performance,
               training effectiveness, and readiness metrics across all echelons of command.
             </Description>
-          </HeaderSection>
+          </HeaderContainer>
 
           <FeaturesGrid>
             <FeatureCard
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
             >
               <FeatureTitle>Real-Time Performance Tracking</FeatureTitle>
               <FeatureDescription>
@@ -357,7 +292,7 @@ const CommandCenter = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
               <FeatureTitle>AI-Powered Analytics</FeatureTitle>
               <FeatureDescription>
@@ -376,7 +311,7 @@ const CommandCenter = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             >
               <FeatureTitle>Command Integration</FeatureTitle>
               <FeatureDescription>
@@ -392,174 +327,178 @@ const CommandCenter = () => {
             </FeatureCard>
           </FeaturesGrid>
         </ContentWrapper>
-      </Section>
+      </ShowcaseSection>
 
-      <Section ref={sectionRefs[1]}>
+      <ShowcaseSection>
         <ContentWrapper>
-          <DataSection>
-            <HeaderSection>
-              <Title
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}
-              >
-                Data-Driven Decision Making
-              </Title>
-              <Description
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-              >
-                Leverage advanced analytics to make informed decisions and optimize training effectiveness
-              </Description>
-            </HeaderSection>
+          <HeaderContainer>
+            <Overline
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Actionable Insights
+            </Overline>
+            <SectionTitle
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              Data-Driven Decision Making
+            </SectionTitle>
+            <Description
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              Leverage advanced analytics to make informed decisions and optimize training effectiveness
+            </Description>
+          </HeaderContainer>
 
-            <DataGrid>
-              <DataCard
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <FeatureTitle>Training Optimization</FeatureTitle>
-                <FeatureDescription>
-                  AI-driven insights help optimize training programs for maximum effectiveness while minimizing injury risk.
-                </FeatureDescription>
-                <DataMetrics>
-                  <Metric>
-                    <MetricValue>85%</MetricValue>
-                    <MetricLabel>Improved ACFT Scores</MetricLabel>
-                  </Metric>
-                  <Metric>
-                    <MetricValue>40%</MetricValue>
-                    <MetricLabel>Reduced Injury Rates</MetricLabel>
-                  </Metric>
-                </DataMetrics>
-              </DataCard>
+          <DataGrid>
+            <DataCard
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <FeatureTitle>Training Optimization</FeatureTitle>
+              <FeatureDescription>
+                AI-driven insights help optimize training programs for maximum effectiveness while minimizing injury risk.
+              </FeatureDescription>
+              <DataMetrics>
+                <Metric>
+                  <MetricValue>85%</MetricValue>
+                  <MetricLabel>Improved ACFT Scores</MetricLabel>
+                </Metric>
+                <Metric>
+                  <MetricValue>40%</MetricValue>
+                  <MetricLabel>Reduced Injury Rates</MetricLabel>
+                </Metric>
+              </DataMetrics>
+            </DataCard>
 
-              <DataCard
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-              >
-                <FeatureTitle>Resource Management</FeatureTitle>
-                <FeatureDescription>
-                  Optimize resource allocation and training schedules based on real-time performance data and unit needs.
-                </FeatureDescription>
-                <DataMetrics>
-                  <Metric>
-                    <MetricValue>30%</MetricValue>
-                    <MetricLabel>Improved Efficiency</MetricLabel>
-                  </Metric>
-                  <Metric>
-                    <MetricValue>95%</MetricValue>
-                    <MetricLabel>Training Completion</MetricLabel>
-                  </Metric>
-                </DataMetrics>
-              </DataCard>
-            </DataGrid>
-          </DataSection>
+            <DataCard
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <FeatureTitle>Resource Management</FeatureTitle>
+              <FeatureDescription>
+                Optimize resource allocation and training schedules based on real-time performance data and unit needs.
+              </FeatureDescription>
+              <DataMetrics>
+                <Metric>
+                  <MetricValue>30%</MetricValue>
+                  <MetricLabel>Improved Efficiency</MetricLabel>
+                </Metric>
+                <Metric>
+                  <MetricValue>95%</MetricValue>
+                  <MetricLabel>Training Completion</MetricLabel>
+                </Metric>
+              </DataMetrics>
+            </DataCard>
+          </DataGrid>
         </ContentWrapper>
-      </Section>
+      </ShowcaseSection>
 
-      <Section ref={sectionRefs[2]}>
+      <ShowcaseSection>
         <ContentWrapper>
-          <ReadinessSection>
-            <HeaderSection>
-              <Title
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}
-              >
-                Unit Readiness & Compliance
-              </Title>
-              <Description
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-              >
-                Real-time monitoring of unit readiness levels and compliance metrics across all training requirements
-              </Description>
-            </HeaderSection>
+          <HeaderContainer>
+            <Overline
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Combat Readiness
+            </Overline>
+            <SectionTitle
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              Unit Readiness & Compliance
+            </SectionTitle>
+            <Description
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              Real-time monitoring of unit readiness levels and compliance metrics across all training requirements
+            </Description>
+          </HeaderContainer>
 
-            <ReadinessCards>
-              <ReadinessCard
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <ReadinessMetric>
-                  <ReadinessValue>98%</ReadinessValue>
-                  <ReadinessInfo>
-                    <ReadinessLabel>ACFT Compliance</ReadinessLabel>
-                    <ReadinessDescription>
-                      Soldiers meeting or exceeding ACFT standards across all events
-                    </ReadinessDescription>
-                  </ReadinessInfo>
-                </ReadinessMetric>
-                <FeatureList>
-                  <FeatureItem>Event-specific performance tracking</FeatureItem>
-                  <FeatureItem>Historical trend analysis</FeatureItem>
-                  <FeatureItem>Individual improvement metrics</FeatureItem>
-                </FeatureList>
-              </ReadinessCard>
+          <ReadinessCards>
+            <ReadinessCard
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <ReadinessMetric>
+                <ReadinessValue>98%</ReadinessValue>
+                <ReadinessInfo>
+                  <ReadinessLabel>ACFT Compliance</ReadinessLabel>
+                  <ReadinessDescription>
+                    Soldiers meeting or exceeding ACFT standards across all events
+                  </ReadinessDescription>
+                </ReadinessInfo>
+              </ReadinessMetric>
+              <FeatureList>
+                <FeatureItem>Event-specific performance tracking</FeatureItem>
+                <FeatureItem>Historical trend analysis</FeatureItem>
+                <FeatureItem>Individual improvement metrics</FeatureItem>
+              </FeatureList>
+            </ReadinessCard>
 
-              <ReadinessCard
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-              >
-                <ReadinessMetric>
-                  <ReadinessValue>92%</ReadinessValue>
-                  <ReadinessInfo>
-                    <ReadinessLabel>Training Readiness</ReadinessLabel>
-                    <ReadinessDescription>
-                      Overall unit readiness based on training completion and performance
-                    </ReadinessDescription>
-                  </ReadinessInfo>
-                </ReadinessMetric>
-                <FeatureList>
-                  <FeatureItem>Required training completion</FeatureItem>
-                  <FeatureItem>Qualification status tracking</FeatureItem>
-                  <FeatureItem>Unit certification metrics</FeatureItem>
-                </FeatureList>
-              </ReadinessCard>
+            <ReadinessCard
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <ReadinessMetric>
+                <ReadinessValue>92%</ReadinessValue>
+                <ReadinessInfo>
+                  <ReadinessLabel>Training Readiness</ReadinessLabel>
+                  <ReadinessDescription>
+                    Overall unit readiness based on training completion and performance
+                  </ReadinessDescription>
+                </ReadinessInfo>
+              </ReadinessMetric>
+              <FeatureList>
+                <FeatureItem>Required training completion</FeatureItem>
+                <FeatureItem>Qualification status tracking</FeatureItem>
+                <FeatureItem>Unit certification metrics</FeatureItem>
+              </FeatureList>
+            </ReadinessCard>
 
-              <ReadinessCard
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                <ReadinessMetric>
-                  <ReadinessValue>94%</ReadinessValue>
-                  <ReadinessInfo>
-                    <ReadinessLabel>Medical Readiness</ReadinessLabel>
-                    <ReadinessDescription>
-                      Medical and physical readiness status across all personnel
-                    </ReadinessDescription>
-                  </ReadinessInfo>
-                </ReadinessMetric>
-                <FeatureList>
-                  <FeatureItem>Injury prevention tracking</FeatureItem>
-                  <FeatureItem>Recovery progress monitoring</FeatureItem>
-                  <FeatureItem>Health assessment compliance</FeatureItem>
-                </FeatureList>
-              </ReadinessCard>
-            </ReadinessCards>
-          </ReadinessSection>
+            <ReadinessCard
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <ReadinessMetric>
+                <ReadinessValue>94%</ReadinessValue>
+                <ReadinessInfo>
+                  <ReadinessLabel>Medical Readiness</ReadinessLabel>
+                  <ReadinessDescription>
+                    Medical and physical readiness status across all personnel
+                  </ReadinessDescription>
+                </ReadinessInfo>
+              </ReadinessMetric>
+              <FeatureList>
+                <FeatureItem>Injury prevention tracking</FeatureItem>
+                <FeatureItem>Recovery progress monitoring</FeatureItem>
+                <FeatureItem>Health assessment compliance</FeatureItem>
+              </FeatureList>
+            </ReadinessCard>
+          </ReadinessCards>
         </ContentWrapper>
-      </Section>
-    </PageContainer>
+      </ShowcaseSection>
+    </>
   );
 };
 

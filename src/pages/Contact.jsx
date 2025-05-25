@@ -1,36 +1,71 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import PageContainer from '../components/common/PageContainer';
-import PageHero from '../components/PageHero';
+import { backgroundStyles } from '../components/ui';
+import { 
+  UniversalFormContainer, 
+  UniversalSection, 
+  UniversalContentWrapper, 
+  UniversalHeaderContainer 
+} from '../styles/UniversalStyles';
 
-const ContactContainer = styled.div`
-  color: var(--color-text-primary);
+const ShowcaseSection = styled(UniversalSection)`
+  ${backgroundStyles}
+  width: 100%;
+  height: 100%;
   min-height: 100vh;
   position: relative;
-  z-index: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
-const ContactSection = styled.section`
-  padding: 0 2rem;
+const ContentWrapper = styled(UniversalContentWrapper)`
+  max-width: 1440px;
+  margin: 0 auto;
   position: relative;
   z-index: 2;
-`;
-
-const ContactForm = styled(motion.form)`
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
   padding: 2rem;
-  border-radius: 24px;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  max-width: 600px;
-  margin: 0 auto;
-  backdrop-filter: blur(10px);
+  justify-content: center;
+  height: 100%;
+  gap: 2rem;
+`;
 
+const HeaderContainer = styled(UniversalHeaderContainer)`
+  text-align: center;
+  position: relative;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem 0;
+`;
+
+const SectionTitle = styled(motion.h2)`
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  margin-bottom: 1.5rem;
+  color: ${({ theme }) => theme.colors.text};
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+`;
+
+const Description = styled(motion.p)`
+  font-size: 1.25rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.6;
+`;
+
+const ContactForm = styled(UniversalFormContainer)`
+  max-width: 600px;
+  
   &:hover {
-    border-color: var(--color-accent);
+    transform: translateY(-4px);
   }
 `;
 
@@ -41,7 +76,7 @@ const FormGroup = styled(motion.div)`
 `;
 
 const Label = styled(motion.label)`
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   font-size: 1rem;
   font-weight: 500;
 `;
@@ -49,31 +84,31 @@ const Label = styled(motion.label)`
 const Input = styled(motion.input)`
   width: 100%;
   padding: 1rem;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: ${({ theme }) => theme.colors.backgroundTertiary};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 12px;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   font-size: 1rem;
   transition: all 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: var(--color-accent);
-    background: rgba(0, 0, 0, 0.3);
+    border-color: ${({ theme }) => theme.components.button.primary.background};
+    background: ${({ theme }) => theme.colors.backgroundTertiary};
   }
 
   &::placeholder {
-    color: var(--color-text-secondary);
+    color: ${({ theme }) => theme.colors.textSecondary};
   }
 `;
 
 const TextArea = styled(motion.textarea)`
   width: 100%;
   padding: 1rem;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: ${({ theme }) => theme.colors.backgroundTertiary};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 12px;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   font-size: 1rem;
   min-height: 120px;
   resize: vertical;
@@ -81,36 +116,29 @@ const TextArea = styled(motion.textarea)`
 
   &:focus {
     outline: none;
-    border-color: var(--color-accent);
-    background: rgba(0, 0, 0, 0.3);
+    border-color: ${({ theme }) => theme.components.button.primary.background};
+    background: ${({ theme }) => theme.colors.backgroundTertiary};
   }
 
   &::placeholder {
-    color: var(--color-text-secondary);
+    color: ${({ theme }) => theme.colors.textSecondary};
   }
 `;
 
 const SubmitButton = styled(motion.button)`
-  padding: 1rem 2rem;
-  background: var(--color-accent);
-  color: white;
+  width: 100%;
+  padding: 1rem;
   border: none;
   border-radius: 12px;
+  background: ${({ theme }) => theme.components.button.primary.background};
+  color: ${({ theme }) => theme.components.button.primary.text};
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
   transition: all 0.3s ease;
 
   &:hover {
-    transform: translateY(-2px);
-    background: var(--color-accent-hover, var(--color-accent));
-  }
-
-  &:active {
-    transform: translateY(0);
+    background: ${({ theme }) => theme.components.button.primary.hover};
   }
 
   &:disabled {
@@ -130,7 +158,7 @@ const SuccessMessage = styled.div`
   font-size: 1rem;
   text-align: center;
   padding: 1rem;
-  background: rgba(0, 0, 0, 0.2);
+  background: ${({ theme }) => theme.colors.backgroundTertiary};
   border-radius: 12px;
   margin-bottom: 1rem;
   border: 1px solid rgba(0, 200, 81, 0.3);
@@ -191,87 +219,97 @@ const Contact = () => {
   };
 
   return (
-    <PageContainer>
-      <ContactContainer>
-        <PageHero 
-          title="Contact Us"
-          subtitle="Get in touch with our team to learn how mov can enhance your military training"
-        />
-
-        <ContactSection>
-          <ContactForm
-            onSubmit={handleSubmit}
+    <ShowcaseSection>
+      <ContentWrapper>
+        <HeaderContainer>
+          <SectionTitle
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {submitSuccess && (
-              <SuccessMessage>
-                Thank you for your message! We'll get back to you soon.
-              </SuccessMessage>
-            )}
-            {errors.submit && <ErrorMessage>{errors.submit}</ErrorMessage>}
-            
-            <FormGroup>
-              <Label>Name</Label>
-              <Input 
-                type="text" 
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-              {errors.name && <ErrorMessage>{errors.name}</ErrorMessage>}
-            </FormGroup>
-            
-            <FormGroup>
-              <Label>Email</Label>
-              <Input 
-                type="email" 
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-              {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
-            </FormGroup>
-            
-            <FormGroup>
-              <Label>Organization</Label>
-              <Input 
-                type="text" 
-                name="organization"
-                value={formData.organization}
-                onChange={handleChange}
-                required
-              />
-              {errors.organization && <ErrorMessage>{errors.organization}</ErrorMessage>}
-            </FormGroup>
-            
-            <FormGroup>
-              <Label>Message</Label>
-              <TextArea 
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                required
-              />
-              {errors.message && <ErrorMessage>{errors.message}</ErrorMessage>}
-            </FormGroup>
-            
-            <SubmitButton
-              type="submit"
-              disabled={isSubmitting}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {isSubmitting ? 'Sending...' : 'Send Message'}
-            </SubmitButton>
-          </ContactForm>
-        </ContactSection>
-      </ContactContainer>
-    </PageContainer>
+            Contact Us
+          </SectionTitle>
+          <Description
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            Get in touch with our team to learn how mov can enhance your military training
+          </Description>
+        </HeaderContainer>
+
+        <ContactForm
+          onSubmit={handleSubmit}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          {submitSuccess && (
+            <SuccessMessage>
+              Thank you for your message! We'll get back to you soon.
+            </SuccessMessage>
+          )}
+          {errors.submit && <ErrorMessage>{errors.submit}</ErrorMessage>}
+          
+          <FormGroup>
+            <Label>Name</Label>
+            <Input 
+              type="text" 
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+            {errors.name && <ErrorMessage>{errors.name}</ErrorMessage>}
+          </FormGroup>
+          
+          <FormGroup>
+            <Label>Email</Label>
+            <Input 
+              type="email" 
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+          </FormGroup>
+          
+          <FormGroup>
+            <Label>Organization</Label>
+            <Input 
+              type="text" 
+              name="organization"
+              value={formData.organization}
+              onChange={handleChange}
+              required
+            />
+            {errors.organization && <ErrorMessage>{errors.organization}</ErrorMessage>}
+          </FormGroup>
+          
+          <FormGroup>
+            <Label>Message</Label>
+            <TextArea 
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              required
+            />
+            {errors.message && <ErrorMessage>{errors.message}</ErrorMessage>}
+          </FormGroup>
+          
+          <SubmitButton
+            type="submit"
+            disabled={isSubmitting}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            {isSubmitting ? 'Sending...' : 'Send Message'}
+          </SubmitButton>
+        </ContactForm>
+      </ContentWrapper>
+    </ShowcaseSection>
   );
 };
 

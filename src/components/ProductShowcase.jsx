@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { backgroundStyles } from './ui';
+import { 
+  UniversalGrid, 
+  UniversalMetricCard, 
+  UniversalSection, 
+  UniversalContentWrapper, 
+  UniversalHeaderContainer 
+} from '../styles/UniversalStyles';
 
-const ShowcaseSection = styled.section`
+const ShowcaseSection = styled(UniversalSection)`
+  ${backgroundStyles}
   width: 100%;
   height: 100%;
   min-height: 100vh;
@@ -11,30 +20,9 @@ const ShowcaseSection = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(
-    circle at center,
-    var(--color-surface) 0%,
-    var(--color-background) 100%
-  );
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(
-      circle at 50% 50%,
-      var(--color-accent) 0%,
-      transparent 70%
-    );
-    opacity: 0.1;
-    z-index: 1;
-  }
 `;
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled(UniversalContentWrapper)`
   max-width: 1440px;
   margin: 0 auto;
   position: relative;
@@ -45,16 +33,28 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   height: 100%;
-  gap: 2rem;
+  gap: 1rem;
+  
+  @media (min-width: 1024px) {
+    padding: 1rem 2rem;
+    gap: 0.5rem;
+  }
 `;
 
-const HeaderContainer = styled.div`
+const HeaderContainer = styled(UniversalHeaderContainer)`
   text-align: center;
   position: relative;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
-  padding: 2rem 0;
+  
+  @media (min-width: 1024px) {
+    padding: 1rem 0;
+  }
+  
+  @media (max-width: 1023px) {
+    padding: 2rem 0;
+  }
 `;
 
 const Overline = styled(motion.span)`
@@ -63,18 +63,18 @@ const Overline = styled(motion.span)`
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.1em;
-  color: var(--color-accent);
+  color: ${({ theme }) => theme.components.button.primary.background};
   margin-bottom: 1.5rem;
   padding: 0.75rem 1.5rem;
-  background: var(--color-surface);
+  background: ${({ theme }) => theme.colors.backgroundSecondary};
   border-radius: 100px;
-  border: 1px solid var(--color-border);
+  border: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
 const Title = styled(motion.h2)`
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   margin-bottom: 1.5rem;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -82,24 +82,24 @@ const Title = styled(motion.h2)`
 
 const Description = styled(motion.p)`
   font-size: 1.25rem;
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   max-width: 640px;
   margin: 0 auto;
   line-height: 1.6;
 `;
 
-const SpecsGrid = styled.div`
-  display: grid;
+const SpecsGrid = styled(UniversalGrid)`
   grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 0;
-
-  @media (max-width: 1024px) {
+  
+  @media (min-width: 1024px) {
+    gap: 1rem;
+    padding: 0.5rem 0;
+  }
+  
+  @media (max-width: 1023px) {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+    padding: 2rem 0;
   }
 
   @media (max-width: 640px) {
@@ -108,38 +108,22 @@ const SpecsGrid = styled.div`
   }
 `;
 
-const SpecCard = styled(motion.div)`
-  padding: 2rem;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 0.5rem;
-  height: 100%;
-  min-height: 180px;
-  aspect-ratio: 1.2;
-
-  @media (max-width: 1024px) {
-    min-height: 160px;
-    aspect-ratio: auto;
+const SpecCard = styled(UniversalMetricCard)`
+  @media (min-width: 1024px) {
+    min-height: 140px;
+    padding: 1rem;
   }
-
-  &:hover {
-    transform: translateY(-4px);
-    border-color: rgba(145, 71, 255, 0.3);
-    background: rgba(0, 0, 0, 0.3);
+  
+  @media (max-width: 1023px) {
+    min-height: 160px;
+    padding: 2rem;
+    aspect-ratio: auto;
   }
 `;
 
-const SpecValue = styled.div`
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
+const SpecValue = styled.div`  font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 600;
-  color: var(--color-accent);
+  color: ${({ theme }) => theme.components.button.primary.background};
   margin-bottom: 0.25rem;
   letter-spacing: -0.02em;
   font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
@@ -147,7 +131,7 @@ const SpecValue = styled.div`
 
 const SpecLabel = styled.div`
   font-size: clamp(1rem, 2vw, 1.25rem);
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 500;
   margin-bottom: 0.5rem;
   letter-spacing: -0.01em;
@@ -155,14 +139,14 @@ const SpecLabel = styled.div`
 
 const SpecDescription = styled.div`
   font-size: clamp(0.8rem, 1.5vw, 0.9rem);
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   line-height: 1.4;
   opacity: 0.8;
   max-width: 200px;
   transition: all 0.3s ease;
 
   ${SpecCard}:hover & {
-    color: var(--color-text-primary);
+    color: ${({ theme }) => theme.colors.text};
     opacity: 1;
   }
 `;
@@ -219,17 +203,19 @@ const ProductShowcase = () => {
         </HeaderContainer>
         <SpecsGrid>
           {specs.map((spec, index) => (
-            <SpecCard
+            <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <SpecValue>{spec.value}</SpecValue>
-              <SpecLabel>{spec.label}</SpecLabel>
-              <SpecDescription>{spec.description}</SpecDescription>
-            </SpecCard>
+              <SpecCard>
+                <SpecValue>{spec.value}</SpecValue>
+                <SpecLabel>{spec.label}</SpecLabel>
+                <SpecDescription>{spec.description}</SpecDescription>
+              </SpecCard>
+            </motion.div>
           ))}
         </SpecsGrid>
       </ContentWrapper>

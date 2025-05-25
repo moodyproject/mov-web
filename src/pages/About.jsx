@@ -1,70 +1,49 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { backgroundStyles } from '../components/ui';
+import { 
+  UniversalGrid, 
+  UniversalMissionCard, 
+  UniversalSection, 
+  UniversalContentWrapper, 
+  UniversalHeaderContainer,
+  spacing 
+} from '../styles/UniversalStyles';
 
-const PageContainer = styled.div`
-  position: relative;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
-  overflow-y: auto;
-  height: 100vh;
-`;
-
-const Section = styled.section`
+const ShowcaseSection = styled(UniversalSection)`
+  ${backgroundStyles}
+  width: 100%;
+  height: 100%;
   min-height: 100vh;
-  scroll-snap-align: start;
   position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  padding: 6rem 0;
-  background: radial-gradient(
-    circle at center,
-    var(--color-surface) 0%,
-    var(--color-background) 100%
-  );
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(
-      circle at 50% 50%,
-      var(--color-accent) 0%,
-      transparent 70%
-    );
-    opacity: 0.1;
-    z-index: 1;
-  }
 `;
 
-const ContentWrapper = styled.div`
-  max-width: 1800px;
-  width: 100%;
+const ContentWrapper = styled(UniversalContentWrapper)`
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 4rem;
   position: relative;
   z-index: 2;
-
-  @media (max-width: 768px) {
-    padding: 0 2rem;
-  }
-`;
-
-const HeaderSection = styled.div`
-  text-align: center;
-  max-width: 800px;
   width: 100%;
-  margin: 0 auto 6rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
+  justify-content: center;
+  height: 100%;
+  gap: 2rem;
+`;
+
+const HeaderContainer = styled(UniversalHeaderContainer)`
+  text-align: center;
+  position: relative;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem 0;
 `;
 
 const Overline = styled(motion.span)`
@@ -73,42 +52,48 @@ const Overline = styled(motion.span)`
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.1em;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.components.button.primary.background};
+  margin-bottom: 1.5rem;
   padding: 0.75rem 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--color-border);
+  background: ${({ theme }) => theme.colors.backgroundSecondary};
   border-radius: 100px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
-const Title = styled(motion.h1)`
-  font-size: clamp(2.5rem, 5vw, 4rem);
+const SectionTitle = styled(motion.h2)`
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  margin-bottom: 1.5rem;
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 600;
-  color: var(--color-text-primary);
-  line-height: 1.2;
-  margin: 0;
   letter-spacing: -0.02em;
+  line-height: 1.2;
 `;
 
 const Description = styled(motion.p)`
   font-size: 1.25rem;
-  color: var(--color-text-secondary);
-  line-height: 1.6;
+  color: ${({ theme }) => theme.colors.textSecondary};
   max-width: 640px;
   margin: 0 auto;
+  line-height: 1.6;
 `;
 
 const MissionGrid = styled.div`
   display: flex;
   justify-content: center;
-  gap: 4rem;
+  gap: ${spacing.xxl};
   align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: ${spacing.lg} 0;
 
   @media (max-width: 1024px) {
-    gap: 3rem;
+    flex-direction: column;
+    gap: ${spacing.lg};
   }
 `;
 
-const MissionContent = styled(motion.div)`
+const MissionContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -116,73 +101,50 @@ const MissionContent = styled(motion.div)`
   width: 100%;
 `;
 
-const MissionCard = styled(motion.div)`
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  padding: 2rem;
-  transition: all 0.3s ease;
-
+const MissionCard = styled(UniversalMissionCard)`
   &:hover {
-    border-color: var(--color-accent);
-    background: rgba(0, 0, 0, 0.3);
     transform: translateY(-4px);
   }
 `;
 
 const MissionTitle = styled.h3`
   font-size: 1.5rem;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   margin: 0 0 1rem;
   font-weight: 600;
 `;
 
 const MissionText = styled.p`
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   line-height: 1.6;
   margin: 0;
   font-size: 1.1rem;
 `;
 
-const MissionIcon = styled.span`
-  font-size: 2rem;
-  margin-right: 1rem;
-`;
-
-const TeamGrid = styled.div`
-  display: grid;
+const TeamGrid = styled(UniversalGrid)`
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-  margin-top: 4rem;
-
+  
   @media (max-width: 1200px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 640px) {
     grid-template-columns: 1fr;
   }
 `;
 
-const TeamCard = styled(motion.div)`
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  padding: 1.5rem;
+const TeamCard = styled(UniversalMissionCard)`
   text-align: center;
-  transition: all 0.3s ease;
   min-width: 0;
-
+  
   &:hover {
-    border-color: var(--color-accent);
-    background: rgba(0, 0, 0, 0.3);
     transform: translateY(-4px);
   }
 `;
 
 const TeamName = styled.h3`
-  font-size: 1.1rem;
-  color: var(--color-text-primary);
+  font-size: 1.25rem;
+  color: ${({ theme }) => theme.colors.text};
   margin: 0 0 0.5rem;
   font-weight: 600;
   white-space: nowrap;
@@ -191,21 +153,20 @@ const TeamName = styled.h3`
 `;
 
 const TeamRole = styled.p`
-  color: var(--color-accent);
-  font-size: 0.75rem;
+  color: ${({ theme }) => theme.components.button.primary.background};
+  font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin: 0;
   font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  line-height: 1.3;
 `;
 
 const TeamDescription = styled.p`
-  color: var(--color-text-secondary);
-  font-size: 0.875rem;
-  line-height: 1.5;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 0.95rem;
+  line-height: 1.6;
   margin: 0.75rem 0 0;
   overflow: visible;
   white-space: normal;
@@ -213,42 +174,40 @@ const TeamDescription = styled.p`
 
 const About = () => {
   return (
-    <PageContainer>
-      <Section id="mission">
+    <>
+      <ShowcaseSection>
         <ContentWrapper>
-          <HeaderSection>
+          <HeaderContainer>
             <Overline
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
               Our Mission
             </Overline>
-            <Title
+            <SectionTitle
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
             >
               Revolutionizing Military Training
-            </Title>
+            </SectionTitle>
             <Description
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
             >
               mov is dedicated to revolutionizing military training through objective, data-driven insights.
             </Description>
-          </HeaderSection>
+          </HeaderContainer>
+          
           <MissionGrid>
             <MissionContent>
               <MissionCard
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
               >
                 <MissionTitle>Our Mission</MissionTitle>
                 <MissionText>
@@ -257,11 +216,12 @@ const About = () => {
                   peak operational readiness.
                 </MissionText>
               </MissionCard>
+              
               <MissionCard
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
               >
                 <MissionTitle>Our Technology</MissionTitle>
                 <MissionText>
@@ -273,38 +233,34 @@ const About = () => {
             </MissionContent>
           </MissionGrid>
         </ContentWrapper>
-      </Section>
+      </ShowcaseSection>
 
-      <Section id="team">
+      <ShowcaseSection>
         <ContentWrapper>
-          <HeaderSection>
+          <HeaderContainer>
             <Overline
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
               Leadership
             </Overline>
-            <Title
+            <SectionTitle
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
             >
               Meet Our Team
-            </Title>
+            </SectionTitle>
             <Description
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
             >
               A diverse team of military veterans, technologists, and industry experts united by the mission
               to transform military training through innovation.
             </Description>
-          </HeaderSection>
+          </HeaderContainer>
 
           <TeamGrid>
             {[
@@ -343,8 +299,8 @@ const About = () => {
             ))}
           </TeamGrid>
         </ContentWrapper>
-      </Section>
-    </PageContainer>
+      </ShowcaseSection>
+    </>
   );
 };
 

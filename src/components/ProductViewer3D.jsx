@@ -1,15 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TextureLoader } from 'three';
 
-const ViewerContainer = styled(motion.div)`
+const ViewerContainer = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
-  background: rgba(0, 0, 0, 0.2);
+  background: transparent;
   border-radius: 24px;
   overflow: hidden;
   display: flex;
@@ -22,49 +21,17 @@ const ViewerContainer = styled(motion.div)`
     width: 100% !important;
     height: 100% !important;
     object-fit: contain;
+    background: transparent !important;
   }
 `;
 
 const Canvas = styled.canvas`
   width: 100%;
   height: 100%;
+  background: transparent !important;
 `;
 
-const Controls = styled.div`
-  position: absolute;
-  bottom: 32px;
-  left: 0;
-  right: 0;
-  display: flex;
-  gap: 1rem;
-  z-index: 10;
-  justify-content: center;
-  padding: 0 1rem;
-`;
-
-const ControlButton = styled(motion.button)`
-  padding: 0.75rem 1.5rem;
-  background: rgba(0, 0, 0, 0.85);
-  border: 1px solid rgba(145, 71, 255, 0.2);
-  border-radius: 8px;
-  color: rgba(255, 255, 255, 0.9);
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  min-width: 140px;
-  text-align: center;
-  backdrop-filter: blur(10px);
-
-  &:hover {
-    background: rgba(145, 71, 255, 0.15);
-    border-color: rgba(145, 71, 255, 0.4);
-    color: rgba(255, 255, 255, 1);
-    transform: translateY(-2px);
-  }
-`;
-
-const DetailsPanel = styled(motion.div)`
+const DetailsPanel = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -338,19 +305,9 @@ const ProductViewer3D = ({
   }, [modelType, color, isRotating]);
 
   return (
-    <ViewerContainer
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      ref={containerRef}
-    >
+    <ViewerContainer ref={containerRef}>
       {showDetails && (
-        <DetailsPanel
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
+        <DetailsPanel>
           <DetailTitle>{specs.title}</DetailTitle>
           <DetailDescription>{specs.description}</DetailDescription>
           

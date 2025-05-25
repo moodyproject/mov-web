@@ -1,25 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { 
+  UniversalGrid, 
+  UniversalTestimonialCard, 
+  UniversalSection, 
+  spacing 
+} from '../styles/UniversalStyles';
 
-const TestimonialsContainer = styled.section`
-  padding: 4rem 2rem;
-  background: linear-gradient(to right, #1a1a1a, #2d2d2d);
+const TestimonialsContainer = styled(UniversalSection)`
+  padding: ${spacing.xxl} ${spacing.lg};
 `;
 
-const TestimonialsGrid = styled.div`
-  display: grid;
+const TestimonialsGrid = styled(UniversalGrid)`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
 `;
 
-const TestimonialCard = styled(motion.div)`
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  backdrop-filter: blur(10px);
+const TestimonialCard = styled(UniversalTestimonialCard)`
+  /* Additional styling can be added if needed */
 `;
 
 const Quote = styled.blockquote`
@@ -83,22 +81,24 @@ const TestimonialsSection = () => {
     <TestimonialsContainer>
       <TestimonialsGrid>
         {testimonials.map((testimonial, index) => (
-          <TestimonialCard
+          <motion.div
             key={testimonial.id}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
           >
-            <Quote>{testimonial.quote}</Quote>
-            <Author>
-              <AuthorImage src={testimonial.image} alt={testimonial.author} />
-              <AuthorInfo>
-                <h4>{testimonial.author}</h4>
-                <p>{testimonial.role}</p>
-              </AuthorInfo>
-            </Author>
-          </TestimonialCard>
+            <TestimonialCard>
+              <Quote>{testimonial.quote}</Quote>
+              <Author>
+                <AuthorImage src={testimonial.image} alt={testimonial.author} />
+                <AuthorInfo>
+                  <h4>{testimonial.author}</h4>
+                  <p>{testimonial.role}</p>
+                </AuthorInfo>
+              </Author>
+            </TestimonialCard>
+          </motion.div>
         ))}
       </TestimonialsGrid>
     </TestimonialsContainer>

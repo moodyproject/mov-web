@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { IconButton } from './ui/Button';
 
-const ScrollButton = styled(motion.button)`
+const ScrollButton = styled(IconButton)`
   position: fixed;
   bottom: 2rem;
   right: 2rem;
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: ${({ theme }) => theme.colors.primary};
+  background: ${({ theme }) => theme.components.button.primary.background};
   color: white;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: ${({ theme }) => theme.shadows.soft};
   z-index: 100;
+
+  &:hover {
+    background: ${({ theme }) => theme.components.button.primary.hover};
+  }
 
   @media (max-width: 768px) {
     bottom: 1rem;
@@ -63,6 +63,7 @@ const ScrollToTop = () => {
           exit={{ opacity: 0, scale: 0 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
+          size="large"
         >
           ↑
         </ScrollButton>

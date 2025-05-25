@@ -2,52 +2,30 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { Container, SectionBackground } from './ui';
+import { PrimaryButton, SecondaryButton } from './ui/Button';
+import { UniversalSection, UniversalContentWrapper, spacing } from '../styles/UniversalStyles';
 
-const HeroContainer = styled.section`
-  width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(
-    circle at center,
-    var(--color-surface) 0%,
-    var(--color-background) 100%
-  );
-  overflow: hidden;
+const HeroContainer = styled(UniversalSection)`
   padding: 0;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(
-      circle at 50% 50%,
-      var(--color-accent) 0%,
-      transparent 70%
-    );
-    opacity: 0.05;
-    z-index: 1;
+  
+  @media (max-width: 480px) {
+    padding: ${spacing.sm} 0;
   }
 `;
 
-const ContentWrapper = styled.div`
-  width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  position: relative;
-  z-index: 2;
-  display: flex;
+const ContentWrapper = styled(UniversalContentWrapper)`
   align-items: center;
   justify-content: center;
   height: 100%;
-  gap: 3rem;
+  
+  @media (max-width: 768px) {
+    padding: 0 ${spacing.md};
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0 ${spacing.sm};
+  }
 `;
 
 const HeroContent = styled.div`
@@ -56,13 +34,23 @@ const HeroContent = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  padding: 2rem 0;
+  padding: ${spacing.lg} 0;
   position: relative;
 
   @media (max-width: 1024px) {
     text-align: center;
-    gap: 3rem;
-    padding: 3rem 0;
+    gap: ${spacing.xl};
+    padding: ${spacing.xl} 0;
+  }
+  
+  @media (max-width: 768px) {
+    padding: ${spacing.lg} 0;
+    min-height: 85vh;
+  }
+  
+  @media (max-width: 480px) {
+    padding: ${spacing.md} 0;
+    min-height: 80vh;
   }
 `;
 
@@ -71,11 +59,16 @@ const TextContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1.5rem;
+  gap: ${spacing.md};
   position: relative;
 
   @media (max-width: 1024px) {
     margin: 0 auto;
+  }
+  
+  @media (max-width: 480px) {
+    gap: ${spacing.sm};
+    max-width: 100%;
   }
 `;
 
@@ -85,18 +78,13 @@ const Overline = styled(motion.span)`
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.1em;
-  color: var(--color-accent);
-  margin-bottom: 0;
+  color: ${({ theme }) => theme.components.button.primary.background};
+  margin-bottom: 1.5rem;
   padding: 0.75rem 1.5rem;
-  background: var(--color-surface);
+  background: ${({ theme }) => theme.colors.backgroundSecondary};
   border-radius: 100px;
-  border: 1px solid var(--color-border);
+  border: 1px solid ${({ theme }) => theme.colors.border};
   width: fit-content;
-
-  @media (max-width: 1024px) {
-    margin-left: auto;
-    margin-right: auto;
-  }
 `;
 
 const Title = styled(motion.h1)`
@@ -104,20 +92,31 @@ const Title = styled(motion.h1)`
   font-weight: 700;
   line-height: 1.1;
   margin-bottom: 0;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   letter-spacing: -0.02em;
   white-space: nowrap;
 
-  @media (max-width: 480px) {
-    font-size: 2.5rem;
+  @media (max-width: 768px) {
     white-space: normal;
+    font-size: clamp(1.8rem, 7vw, 2.8rem);
+    line-height: 1.2;
+  }
+
+  @media (max-width: 480px) {
+    font-size: clamp(1.6rem, 8vw, 2.2rem);
+    white-space: normal;
+    line-height: 1.2;
+  }
+  
+  @media (max-width: 320px) {
+    font-size: 1.6rem;
   }
 `;
 
 const Description = styled(motion.p)`
   font-size: 1.25rem;
   line-height: 1.6;
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   margin-bottom: 1.5rem;
   max-width: 540px;
   opacity: 0.9;
@@ -125,6 +124,12 @@ const Description = styled(motion.p)`
   @media (max-width: 1024px) {
     margin-left: auto;
     margin-right: auto;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    max-width: 100%;
   }
 `;
 
@@ -140,42 +145,16 @@ const ButtonGroup = styled(motion.div)`
   @media (max-width: 480px) {
     flex-direction: column;
     gap: 1rem;
+    margin-top: 0.5rem;
   }
 `;
 
-const PrimaryButton = styled(motion(Link))`
-  padding: 1rem 2.5rem;
-  background: var(--color-accent);
-  color: white;
-  border-radius: 100px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  border: none;
-  font-size: 1.125rem;
-
-  &:hover {
-    background: var(--color-accent-hover);
-    transform: translateY(-2px);
-  }
+const StyledPrimaryButton = styled(PrimaryButton)`
+  /* Additional styling can be added if needed */
 `;
 
-const SecondaryButton = styled(motion(Link))`
-  padding: 1rem 2.5rem;
-  background: transparent;
-  color: var(--color-text-primary);
-  border-radius: 100px;
-  font-weight: 500;
-  text-decoration: none;
-  border: 1px solid var(--color-border);
-  transition: all 0.3s ease;
-  font-size: 1.125rem;
-
-  &:hover {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
-    transform: translateY(-2px);
-  }
+const StyledSecondaryButton = styled(SecondaryButton)`
+  /* Additional styling can be added if needed */
 `;
 
 const FloatingElements = styled.div`
@@ -186,15 +165,18 @@ const FloatingElements = styled.div`
   bottom: 0;
   pointer-events: none;
   z-index: 1;
+  
+  @media (max-width: 480px) {
+    display: none;
+  }
 `;
 
 const FloatingElement = styled(motion.div)`
   position: absolute;
   width: 120px;
   height: 120px;
-  background: var(--color-surface);
+  background: ${({ theme }) => `rgba(${parseInt(theme.components.button.primary.background.slice(1, 3), 16)}, ${parseInt(theme.components.button.primary.background.slice(3, 5), 16)}, ${parseInt(theme.components.button.primary.background.slice(5, 7), 16)}, 0.05)`};
   border-radius: 24px;
-  border: 1px solid var(--color-border);
   z-index: 2;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 `;
@@ -204,7 +186,6 @@ const HeroImage = styled.img`
   height: auto;
   max-height: 100%;
   border-radius: 32px;
-  border: 1px solid var(--color-border);
   filter: brightness(0.9) contrast(1.1);
   transition: all 0.3s ease;
   object-fit: contain;
@@ -222,19 +203,19 @@ const HeroSection = () => {
         <FloatingElement
           initial={{ x: -100, y: -100, opacity: 0 }}
           animate={{ x: 0, y: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.5 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
           style={{ top: '20%', left: '10%' }}
         />
         <FloatingElement
           initial={{ x: 100, y: -100, opacity: 0 }}
           animate={{ x: 0, y: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.7 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
           style={{ top: '40%', right: '10%' }}
         />
         <FloatingElement
           initial={{ x: -100, y: 100, opacity: 0 }}
           animate={{ x: 0, y: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.9 }}
+          transition={{ duration: 0.4, delay: 0.4 }}
           style={{ bottom: '20%', left: '20%' }}
         />
       </FloatingElements>
@@ -244,31 +225,31 @@ const HeroSection = () => {
             <Overline
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.3 }}
             >
               Innovation in Motion
             </Overline>
             <Title
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.3, delay: 0.05 }}
             >
               Revolutionizing Military Training
             </Title>
             <Description
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
             >
               Our cutting-edge motion tracking technology provides real-time analytics and performance insights for military training and operations.
             </Description>
             <ButtonGroup
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.3, delay: 0.15 }}
             >
-              <PrimaryButton to="/contact">Get Started</PrimaryButton>
-              <SecondaryButton to="/about">Learn More</SecondaryButton>
+              <StyledPrimaryButton as={Link} to="/contact">Get Started</StyledPrimaryButton>
+              <StyledSecondaryButton as={Link} to="/about">Learn More</StyledSecondaryButton>
             </ButtonGroup>
           </TextContent>
         </HeroContent>

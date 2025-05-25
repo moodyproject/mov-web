@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { PrimaryButton } from './ui/Button';
 
 const NewsletterSection = styled.section`
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary} 0%, ${({ theme }) => theme.colors.accent} 100%);
+  background: linear-gradient(135deg, ${({ theme }) => theme.components.button.primary.background} 0%, ${({ theme }) => theme.components.button.primary.hover} 100%);
   padding: 6rem 2rem;
   color: white;
   text-align: center;
@@ -50,15 +51,15 @@ const Input = styled.input`
   }
 `;
 
-const SubmitButton = styled(motion.button)`
+const SubmitButton = styled(PrimaryButton)`
   padding: 1rem 2rem;
-  border: none;
   border-radius: 4px;
-  background: ${({ theme }) => theme.colors.background};
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
   white-space: nowrap;
+  background: ${({ theme }) => theme.colors.background}; // Dark background to contrast with newsletter section
+  
+  &:hover {
+    background: ${({ theme }) => theme.colors.backgroundTertiary};
+  }
 `;
 
 const Newsletter = () => {

@@ -1,77 +1,48 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { backgroundStyles } from '../components/ui';
+import { 
+  UniversalGrid, 
+  UniversalFeatureCard, 
+  UniversalSection, 
+  UniversalContentWrapper, 
+  UniversalHeaderContainer 
+} from '../styles/UniversalStyles';
 
-const PageContainer = styled.div`
-  background: radial-gradient(
-    circle at center,
-    var(--color-surface) 0%,
-    var(--color-background) 100%
-  );
-  position: relative;
-  overflow-x: hidden;
-  height: 100vh;
-  scroll-snap-type: y mandatory;
-  overflow-y: auto;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(
-      circle at 50% 50%,
-      var(--color-accent) 0%,
-      transparent 70%
-    );
-    opacity: 0.05;
-    z-index: 1;
-    pointer-events: none;
-  }
-`;
-
-const Section = styled.section`
+const ShowcaseSection = styled(UniversalSection)`
+  ${backgroundStyles}
+  width: 100%;
+  height: 100%;
   min-height: 100vh;
   position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 0;
-  scroll-snap-align: start;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(
-      circle at 50% 50%,
-      var(--color-accent) 0%,
-      transparent 70%
-    );
-    opacity: 0.05;
-    z-index: 1;
-    pointer-events: none;
-  }
 `;
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled(UniversalContentWrapper)`
   max-width: 1440px;
-  width: 100%;
   margin: 0 auto;
-  padding: 0 2rem;
   position: relative;
   z-index: 2;
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  gap: 2rem;
 `;
 
-const HeaderSection = styled.div`
+const HeaderContainer = styled(UniversalHeaderContainer)`
   text-align: center;
+  position: relative;
   max-width: 800px;
-  margin: 0 auto 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem 0;
 `;
 
 const Overline = styled(motion.span)`
@@ -80,82 +51,90 @@ const Overline = styled(motion.span)`
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.1em;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.components.button.primary.background};
+  margin-bottom: 1.5rem;
   padding: 0.75rem 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--color-border);
+  background: ${({ theme }) => theme.colors.backgroundSecondary};
   border-radius: 100px;
-  margin-bottom: 2rem;
+  border: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
-const Title = styled(motion.h1)`
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 600;
-  color: var(--color-text-primary);
-  line-height: 1.2;
+const SectionTitle = styled(motion.h2)`
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
   margin-bottom: 1.5rem;
+  color: ${({ theme }) => theme.colors.text};
+  font-weight: 600;
   letter-spacing: -0.02em;
+  line-height: 1.2;
 `;
 
 const Description = styled(motion.p)`
   font-size: 1.25rem;
-  color: var(--color-text-secondary);
-  line-height: 1.6;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  max-width: 640px;
   margin: 0 auto;
+  line-height: 1.6;
 `;
 
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
+const ProgramsGrid = styled(UniversalGrid)`
+  grid-template-columns: repeat(3, 1fr);
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
-const Card = styled(motion.div)`
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-
+const ProgramCard = styled(UniversalFeatureCard)`
   &:hover {
-    transform: translateY(-4px);
-    border-color: var(--color-accent);
+    transform: translateY(-8px) scale(1.02);
   }
 `;
 
 const CardTitle = styled.h3`
-  font-size: 1.15rem;
-  color: var(--color-text-primary);
-  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin: 0;
 `;
 
 const CardDescription = styled.p`
-  color: var(--color-text-secondary);
-  line-height: 1.4;
-  margin-bottom: 0.75rem;
-  font-size: 0.85rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin: 0;
 `;
 
 const List = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+  flex: 1;
 `;
 
 const ListItem = styled.li`
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 0.9rem;
+  line-height: 1.6;
   margin-bottom: 0.5rem;
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  font-size: 0.85rem;
+  padding-left: 1.25rem;
+  position: relative;
 
-  &:before {
+  &::before {
     content: '→';
-    color: var(--color-accent);
-    font-weight: bold;
+    position: absolute;
+    left: 0;
+    color: ${({ theme }) => theme.components.button.primary.background};
+    transition: transform 0.3s ease;
+  }
+
+  ${ProgramCard}:hover &::before {
+    transform: translateX(4px);
   }
 
   &:last-child {
@@ -163,78 +142,50 @@ const ListItem = styled.li`
   }
 `;
 
-const WorkoutSection = styled(Section)`
-  padding: 1rem 0;
-  min-height: 95vh;
-`;
-
 const WorkoutGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
 
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 `;
 
-const WorkoutCard = styled(Card)`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 1.25rem;
+const WorkoutCard = styled(ProgramCard)`
+  padding: 2rem;
 `;
 
 const WorkoutSchedule = styled.div`
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0.4rem;
-  margin-top: 0.4rem;
-  font-size: 0.85rem;
+  gap: 0.5rem 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
 `;
 
 const TimeSlot = styled.span`
-  color: var(--color-accent);
+  color: ${({ theme }) => theme.components.button.primary.background};
   font-weight: 500;
   white-space: nowrap;
-  opacity: 0.9;
 `;
 
 const Activity = styled.span`
-  color: var(--color-text-secondary);
-  line-height: 1.3;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  line-height: 1.4;
 `;
 
 const TrainingPrograms = () => {
-  const [activeSection, setActiveSection] = useState(0);
-  const sections = ['overview', 'workouts'];
-  const sectionRefs = sections.map(() => useRef(null));
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const viewportHeight = window.innerHeight;
-
-      sectionRefs.forEach((ref, index) => {
-        if (!ref.current) return;
-        
-        const rect = ref.current.getBoundingClientRect();
-        if (rect.top <= viewportHeight * 0.5 && rect.bottom >= viewportHeight * 0.5) {
-          setActiveSection(index);
-        }
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <PageContainer>
-      <Section ref={sectionRefs[0]}>
+    <>
+      <ShowcaseSection>
         <ContentWrapper>
-          <HeaderSection>
+          <HeaderContainer>
             <Overline
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -242,29 +193,30 @@ const TrainingPrograms = () => {
             >
               Military Fitness Excellence
             </Overline>
-            <Title
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              ACFT-Focused Training Programs
-            </Title>
-            <Description
+            <SectionTitle
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              ACFT-Focused Training Programs
+            </SectionTitle>
+            <Description
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
             >
               Comprehensive training solutions designed specifically for military personnel,
               focusing on ACFT performance improvement, injury prevention, and overall
               combat readiness.
             </Description>
-          </HeaderSection>
+          </HeaderContainer>
 
-          <Grid>
-            <Card
+          <ProgramsGrid>
+            <ProgramCard
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
             >
               <CardTitle>ACFT Event Optimization</CardTitle>
               <CardDescription>
@@ -278,12 +230,13 @@ const TrainingPrograms = () => {
                 <ListItem>Plank hold core strengthening</ListItem>
                 <ListItem>2-mile run aerobic capacity improvement</ListItem>
               </List>
-            </Card>
+            </ProgramCard>
 
-            <Card
+            <ProgramCard
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
               <CardTitle>Injury Prevention & Recovery</CardTitle>
               <CardDescription>
@@ -297,12 +250,13 @@ const TrainingPrograms = () => {
                 <ListItem>Pre-hab exercise routines</ListItem>
                 <ListItem>Recovery nutrition guidance</ListItem>
               </List>
-            </Card>
+            </ProgramCard>
 
-            <Card
+            <ProgramCard
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             >
               <CardTitle>Performance Tracking</CardTitle>
               <CardDescription>
@@ -316,14 +270,14 @@ const TrainingPrograms = () => {
                 <ListItem>Personalized feedback and adjustments</ListItem>
                 <ListItem>Unit-wide performance analytics</ListItem>
               </List>
-            </Card>
-          </Grid>
+            </ProgramCard>
+          </ProgramsGrid>
         </ContentWrapper>
-      </Section>
+      </ShowcaseSection>
 
-      <WorkoutSection ref={sectionRefs[1]}>
+      <ShowcaseSection>
         <ContentWrapper>
-          <HeaderSection>
+          <HeaderContainer>
             <Overline
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -331,28 +285,29 @@ const TrainingPrograms = () => {
             >
               Army Physical Readiness Training
             </Overline>
-            <Title
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              Daily Training Schedule
-            </Title>
-            <Description
+            <SectionTitle
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
+              Daily Training Schedule
+            </SectionTitle>
+            <Description
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
               Structured physical training following the Army PRT program, designed to build strength,
               endurance, and mobility while preventing injuries.
             </Description>
-          </HeaderSection>
+          </HeaderContainer>
 
           <WorkoutGrid>
             <WorkoutCard
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
             >
               <CardTitle>Morning PRT Session</CardTitle>
               <CardDescription>
@@ -374,8 +329,9 @@ const TrainingPrograms = () => {
 
             <WorkoutCard
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
               <CardTitle>Strength Focus</CardTitle>
               <CardDescription>
@@ -392,8 +348,9 @@ const TrainingPrograms = () => {
 
             <WorkoutCard
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             >
               <CardTitle>Endurance Training</CardTitle>
               <CardDescription>
@@ -410,8 +367,9 @@ const TrainingPrograms = () => {
 
             <WorkoutCard
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 }}
             >
               <CardTitle>Recovery Focus</CardTitle>
               <CardDescription>
@@ -427,8 +385,8 @@ const TrainingPrograms = () => {
             </WorkoutCard>
           </WorkoutGrid>
         </ContentWrapper>
-      </WorkoutSection>
-    </PageContainer>
+      </ShowcaseSection>
+    </>
   );
 };
 

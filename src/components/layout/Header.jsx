@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import MobileMenu from './MobileMenu';
+import { PrimaryButton } from '../ui/Button';
 
 const Nav = styled.nav`
   position: fixed;
@@ -14,11 +14,29 @@ const Nav = styled.nav`
   height: 80px;
   display: flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--color-border);
-  transition: all 0.3s ease;
+  background: ${({ $scrollProgress }) => 
+    `rgba(10, 9, 15, ${0.3 + ($scrollProgress * 0.4)})`};
+  backdrop-filter: blur(${({ $scrollProgress }) => 15 + ($scrollProgress * 10)}px);
+  border-bottom: 1px solid ${({ $scrollProgress }) => 
+    `rgba(109, 40, 217, ${0.1 + ($scrollProgress * 0.15)})`};
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: ${({ $scrollProgress }) => 
+    `0 4px 20px rgba(109, 40, 217, ${0.05 + ($scrollProgress * 0.1)})`};
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+      rgba(109, 40, 217, 0.05) 0%, 
+      rgba(139, 92, 246, 0.02) 50%, 
+      transparent 100%);
+    opacity: ${({ $scrollProgress }) => $scrollProgress * 0.8};
+    transition: opacity 0.3s ease;
+  }
 `;
 
 const NavContainer = styled.div`
@@ -29,6 +47,8 @@ const NavContainer = styled.div`
   margin: 0 auto;
   padding: 0 2rem;
   height: 100%;
+  position: relative;
+  z-index: 10;
 
   @media (max-width: 768px) {
     padding: 0 1.5rem;
@@ -38,12 +58,12 @@ const NavContainer = styled.div`
 const Logo = styled(Link)`
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   letter-spacing: -0.03em;
   transition: all 0.3s ease;
   
   &:hover {
-    color: var(--color-accent);
+    color: ${({ theme }) => theme.components.button.primary.background};
   }
 `;
 
@@ -51,7 +71,7 @@ const MenuButton = styled(motion.button)`
   display: none;
   background: none;
   border: none;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0.5rem;
@@ -69,16 +89,22 @@ const NavLinks = styled.div`
   margin-left: auto;
 
   @media (max-width: 768px) {
-    display: none;
+    gap: 0;
   }
 `;
 
 const NavItem = styled.div`
   position: relative;
+  
+  @media (max-width: 768px) {
+    &.desktop-only {
+      display: none;
+    }
+  }
 `;
 
 const NavLink = styled(Link)`
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   font-weight: 500;
   transition: all 0.3s ease;
   font-size: 1rem;
@@ -92,12 +118,12 @@ const NavLink = styled(Link)`
     height: 2px;
     bottom: 0;
     left: 0;
-    background-color: var(--color-accent);
+    background-color: ${({ theme }) => theme.components.button.primary.background};
     transition: all 0.3s ease;
   }
 
   &:hover {
-    color: var(--color-text-primary);
+    color: ${({ theme }) => theme.colors.text};
     
     &:after {
       width: 100%;
@@ -108,7 +134,7 @@ const NavLink = styled(Link)`
 const NavButton = styled.button`
   background: none;
   border: none;
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   font-size: 1rem;
   padding: 0.5rem;
   cursor: pointer;
@@ -119,7 +145,7 @@ const NavButton = styled.button`
   font-weight: 500;
 
   &:hover {
-    color: var(--color-text-primary);
+    color: ${({ theme }) => theme.colors.text};
   }
 
   &:after {
@@ -138,57 +164,38 @@ const DropdownMenu = styled(motion.div)`
   top: calc(100% + 1rem);
   left: 50%;
   transform: translateX(-50%);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(18, 17, 24, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(109, 40, 217, 0.2);
   border-radius: 16px;
   padding: 1rem;
   min-width: 320px;
   display: grid;
   gap: 0.5rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(109, 40, 217, 0.15);
 `;
 
 const DropdownItem = styled(Link)`
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 500;
   border-radius: 12px;
   transition: all 0.3s ease;
+  background: rgba(109, 40, 217, 0.05);
   
   span {
-    color: var(--color-text-secondary);
+    color: ${({ theme }) => theme.colors.textSecondary};
     font-size: 0.9rem;
     margin-top: 0.25rem;
     font-weight: 400;
   }
 
   &:hover {
-    background: var(--color-surface-raised);
+    background: rgba(109, 40, 217, 0.15);
     transform: translateX(4px);
-  }
-`;
-
-const CTAButton = styled(motion.button)`
-  background-color: var(--color-accent);
-  color: white;
-  border: none;
-  padding: 0.875rem 2rem;
-  border-radius: 100px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: var(--color-accent-hover);
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: 768px) {
-    padding: 0.75rem 1.5rem;
-    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(109, 40, 217, 0.1);
   }
 `;
 
@@ -210,9 +217,8 @@ const features = [
   }
 ];
 
-const Header = () => {
+const Header = ({ onMobileMenuOpen, scrollProgress = 0 }) => {
   const [isFeaturesOpen, setIsFeaturesOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -224,15 +230,16 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const headerOpacity = 0.95 + (scrollProgress * 0.05);
+  const headerBlur = 12 + (scrollProgress * 8);
+  const purpleTint = scrollProgress * 0.03;
+
   return (
-    <Nav style={{ 
-      boxShadow: isScrolled ? '0 4px 30px rgba(0, 0, 0, 0.1)' : 'none',
-      height: isScrolled ? '70px' : '80px'
-    }}>
+    <Nav $scrollProgress={scrollProgress}>
       <NavContainer>
         <Logo to="/">mov</Logo>
         <NavLinks>
-          <NavItem>
+          <NavItem className="desktop-only">
             <NavButton 
               onClick={() => {
                 setIsFeaturesOpen(!isFeaturesOpen);
@@ -248,12 +255,12 @@ const Header = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.15 }}
                   onMouseEnter={() => setIsFeaturesOpen(true)}
                   onMouseLeave={() => setIsFeaturesOpen(false)}
                 >
-                  {features.map((feature) => (
-                    <DropdownItem key={feature.path} to={feature.path}>
+                  {features.map(feature => (
+                    <DropdownItem to={feature.path} key={feature.name}>
                       {feature.name}
                       <span>{feature.description}</span>
                     </DropdownItem>
@@ -262,30 +269,26 @@ const Header = () => {
               )}
             </AnimatePresence>
           </NavItem>
-          <NavItem>
+          <NavItem
+            className="desktop-only"
+          >
             <NavLink to="/about">About</NavLink>
           </NavItem>
-          <CTAButton
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => window.location.href = '/contact'}
+          <NavItem
+            className="desktop-only"
           >
-            Get Started
-          </CTAButton>
+            <NavLink to="/contact">Contact</NavLink>
+          </NavItem>
+          
+          <MenuButton
+            onClick={onMobileMenuOpen}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Menu"
+          >
+            ☰
+          </MenuButton>
         </NavLinks>
-        <MenuButton
-          onClick={() => setIsMobileMenuOpen(true)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          ☰
-        </MenuButton>
       </NavContainer>
-      <MobileMenu 
-        isOpen={isMobileMenuOpen} 
-        onClose={() => setIsMobileMenuOpen(false)}
-        features={features}
-      />
     </Nav>
   );
 };

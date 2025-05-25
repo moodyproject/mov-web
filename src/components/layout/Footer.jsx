@@ -5,83 +5,90 @@ import { motion } from 'framer-motion';
 
 const FooterContainer = styled.footer`
   width: 100%;
-  background: radial-gradient(
-    circle at center,
-    var(--color-surface) 0%,
-    var(--color-background) 100%
-  );
+  background: transparent;
+  backdrop-filter: none;
+  border-top: none;
   position: relative;
-  padding: 3rem 0 0 0;
-  border-top: 1px solid var(--color-border);
-  z-index: 1;
-  margin-top: auto;
-
+  padding: 2rem 0 1rem 0;
+  z-index: 10;
+  margin-top: 0;
+  overflow: hidden;
+  box-shadow: none;
+  
   &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(
-      circle at 50% 50%,
-      var(--color-accent) 0%,
-      transparent 70%
-    );
-    opacity: 0.05;
-    z-index: 0;
-    pointer-events: none;
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem 0 1rem 0;
   }
 `;
 
 const FooterInner = styled.div`
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2rem 1.5rem;
+  padding: 0 2rem;
   position: relative;
   z-index: 2;
+  
+  @media (max-width: 768px) {
+    padding: 0 1.5rem;
+  }
 `;
 
 const TopSection = styled.div`
   display: grid;
-  grid-template-columns: 1.5fr 2fr;
-  gap: 3rem;
-  margin-bottom: 2rem;
+  grid-template-columns: 2fr 3fr;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
   }
 `;
 
 const BrandSection = styled.div`
-  max-width: 400px;
+  max-width: 350px;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 768px) {
     max-width: 100%;
+    text-align: center;
   }
 `;
 
 const Logo = styled(Link)`
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.text};
   text-decoration: none;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   display: inline-block;
   letter-spacing: -0.02em;
   transition: all 0.3s ease;
+  background: linear-gradient(135deg, #FFFFFF 0%, rgba(255, 255, 255, 0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 
   &:hover {
-    color: var(--color-accent);
+    transform: translateY(-2px);
+    text-shadow: ${({ theme }) => theme.shadows.textGlow};
   }
 `;
 
 const BrandText = styled.p`
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--color-text-secondary);
-  margin-bottom: 1.5rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  margin-bottom: 0;
+  
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+    max-width: 280px;
+    margin: 0 auto;
+  }
 `;
 
 const LinksGrid = styled.div`
@@ -90,23 +97,27 @@ const LinksGrid = styled.div`
   gap: 1.5rem;
 
   @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    text-align: center;
   }
 
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
     gap: 1rem;
+    max-width: 200px;
+    margin: 0 auto;
   }
 `;
 
 const LinkColumn = styled.div`
   h4 {
-    color: var(--color-accent);
-    font-size: 0.75rem;
+    color: ${({ theme }) => theme.components.button.primary.background};
+    font-size: 0.7rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
   }
 
   ul {
@@ -116,62 +127,52 @@ const LinkColumn = styled.div`
   }
 
   li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
   }
 
   a {
-    color: var(--color-text-secondary);
+    color: ${({ theme }) => theme.colors.textSecondary};
     text-decoration: none;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     transition: all 0.3s ease;
     display: inline-block;
 
     &:hover {
-      color: var(--color-text-primary);
-      transform: translateX(4px);
+      color: ${({ theme }) => theme.colors.text};
+      transform: translateX(2px);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    h4 {
+      font-size: 0.65rem;
+      margin-bottom: 0.4rem;
+    }
+    
+    a {
+      font-size: 0.65rem;
+    }
+    
+    li {
+      margin-bottom: 0.2rem;
     }
   }
 `;
 
 const BottomSection = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding-top: 1.5rem;
-  margin-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
-  font-size: 0.75rem;
-  color: var(--color-text-secondary);
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  font-size: 0.7rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 0.75rem;
-    text-align: center;
-  }
-`;
-
-const SocialLinks = styled.div`
-  display: flex;
-  gap: 0.75rem;
-`;
-
-const SocialIcon = styled(motion.a)`
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-secondary);
-  font-size: 0.875rem;
-  border: 1px solid var(--color-border);
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  background: rgba(17, 17, 17, 0.6);
-
-  &:hover {
-    color: var(--color-accent);
-    border-color: var(--color-accent);
-    transform: translateY(-2px);
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+    font-size: 0.65rem;
   }
 `;
 
@@ -183,8 +184,7 @@ const Footer = () => {
           <BrandSection>
             <Logo to="/">mov</Logo>
             <BrandText>
-              Revolutionizing military training with advanced motion tracking and real-time analytics. 
-              Empowering tactical excellence through cutting-edge technology.
+              Revolutionizing military training with advanced motion tracking and real-time analytics.
             </BrandText>
           </BrandSection>
           <LinksGrid>

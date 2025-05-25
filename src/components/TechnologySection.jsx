@@ -1,8 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { backgroundStyles } from './ui';
+import { 
+  UniversalGrid, 
+  UniversalFeatureCard, 
+  UniversalSection, 
+  UniversalContentWrapper, 
+  UniversalHeaderContainer 
+} from '../styles/UniversalStyles';
 
-const TechContainer = styled.div`
+const TechContainer = styled(UniversalSection)`
+  ${backgroundStyles}
   width: 100%;
   height: 100%;
   display: flex;
@@ -12,7 +21,7 @@ const TechContainer = styled.div`
   overflow: hidden;
 `;
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled(UniversalContentWrapper)`
   max-width: 1440px;
   width: 100%;
   margin: 0 auto;
@@ -24,7 +33,7 @@ const ContentWrapper = styled.div`
   z-index: 2;
 `;
 
-const HeaderContainer = styled.div`
+const HeaderContainer = styled(UniversalHeaderContainer)`
   text-align: center;
   max-width: 800px;
   margin: 0 auto;
@@ -39,25 +48,25 @@ const Overline = styled(motion.span)`
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.1em;
-  color: var(--color-accent);
+  color: ${({ theme }) => theme.components.button.primary.background};
   padding: 0.75rem 1.5rem;
-  background: var(--color-surface);
+  background: ${({ theme }) => theme.colors.backgroundSecondary};
   border-radius: 100px;
-  border: 1px solid var(--color-border);
+  border: 1px solid ${({ theme }) => theme.colors.border};
   margin: 0 auto;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: var(--color-accent);
+    border-color: ${({ theme }) => theme.components.button.primary.background};
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.1);
+    box-shadow: 0 8px 24px rgba(109, 40, 217, 0.1);
   }
 `;
 
 const Title = styled(motion.h2)`
   font-size: clamp(2rem, 4vw, 3rem);
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -67,66 +76,33 @@ const Title = styled(motion.h2)`
 
 const Description = styled(motion.p)`
   font-size: 1.125rem;
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   max-width: 640px;
   margin: 0 auto;
   line-height: 1.6;
   opacity: 0.9;
 `;
 
-const TechGrid = styled.div`
-  display: grid;
+const TechGrid = styled(UniversalGrid)`
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  width: 100%;
-
+  
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 `;
 
-const TechCategory = styled(motion.div)`
-  background: var(--color-surface);
-  border-radius: 24px;
-  border: 1px solid var(--color-border);
-  padding: 2rem;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+const TechCategory = styled(UniversalFeatureCard)`
   gap: 1.75rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, transparent 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: -1;
-  }
-
+  
   &:hover {
     transform: translateY(-4px);
-    border-color: var(--color-accent);
-    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.1);
-
-    &::before {
-      opacity: 1;
-    }
   }
 `;
 
 const CategoryTitle = styled.h3`
   font-size: 1.5rem;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 600;
   letter-spacing: -0.02em;
   margin: 0;
@@ -140,7 +116,7 @@ const CategoryTitle = styled.h3`
     left: 0;
     width: 32px;
     height: 2px;
-    background: var(--color-accent);
+    background: ${({ theme }) => theme.components.button.primary.background};
     border-radius: 1px;
     transition: width 0.3s ease;
   }
@@ -169,7 +145,7 @@ const SpecItem = styled(motion.div)`
     top: 0.5rem;
     width: 6px;
     height: 6px;
-    background: var(--color-accent);
+    background: ${({ theme }) => theme.components.button.primary.background};
     border-radius: 2px;
     transform: rotate(45deg);
     transition: transform 0.3s ease;
@@ -182,7 +158,7 @@ const SpecItem = styled(motion.div)`
 
 const SpecTitle = styled.h4`
   font-size: 1.125rem;
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text};
   margin: 0 0 0.5rem 0;
   font-weight: 500;
   display: flex;
@@ -192,7 +168,7 @@ const SpecTitle = styled.h4`
 
 const SpecValue = styled.p`
   font-size: 0.9375rem;
-  color: var(--color-text-secondary);
+  color: ${({ theme }) => theme.colors.textSecondary};
   line-height: 1.6;
   margin: 0 0 0.25rem 0;
   font-weight: 500;
@@ -201,7 +177,7 @@ const SpecValue = styled.p`
 const SpecDetail = styled.span`
   display: block;
   font-size: 0.875rem;
-  color: var(--color-accent);
+  color: ${({ theme }) => theme.components.button.primary.background};
   opacity: 0.9;
   font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
   letter-spacing: 0.02em;
@@ -288,30 +264,32 @@ const TechnologySection = () => {
 
         <TechGrid>
           {Object.entries(techSpecs).map(([key, category], index) => (
-            <TechCategory
+            <motion.div
               key={key}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
             >
-              <CategoryTitle>{category.title}</CategoryTitle>
-              <SpecList>
-                {category.specs.map((spec, specIndex) => (
-                  <SpecItem
-                    key={specIndex}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.4 + specIndex * 0.1 }}
-                  >
-                    <SpecTitle>{spec.title}</SpecTitle>
-                    <SpecValue>{spec.value}</SpecValue>
-                    <SpecDetail>{spec.detail}</SpecDetail>
-                  </SpecItem>
-                ))}
-              </SpecList>
-            </TechCategory>
+              <TechCategory>
+                <CategoryTitle>{category.title}</CategoryTitle>
+                <SpecList>
+                  {category.specs.map((spec, specIndex) => (
+                    <SpecItem
+                      key={specIndex}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.4 + specIndex * 0.1 }}
+                    >
+                      <SpecTitle>{spec.title}</SpecTitle>
+                      <SpecValue>{spec.value}</SpecValue>
+                      <SpecDetail>{spec.detail}</SpecDetail>
+                    </SpecItem>
+                  ))}
+                </SpecList>
+              </TechCategory>
+            </motion.div>
           ))}
         </TechGrid>
       </ContentWrapper>
