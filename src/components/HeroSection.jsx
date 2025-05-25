@@ -85,6 +85,12 @@ const Overline = styled(motion.span)`
   border-radius: 100px;
   border: 1px solid ${({ theme }) => theme.colors.border};
   width: fit-content;
+  
+  @media (max-width: 768px) {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const Title = styled(motion.h1)`
